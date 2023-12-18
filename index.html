@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced Counter with Callbacks and Promises</title>
+  <style>
+    button {
+      font-size: 16px;
+      padding: 10px;
+      margin: 5px;
+      background-color: orangered;
+      color: white;
+      border-radius: 18px;
+      text-align: center;
+      border-style:solid ;
+    }
+  </style>
+</head>
+<body>
+  <h2>Enhanced Counter</h2>
+  <p id="count">0</p>
+  <button onclick="increment()">Increment</button>
+  <button onclick="decrement()">Decrement</button>
+  <button onclick="reset()">Reset</button>
+
+  <h3>Count History</h3>
+  <ul id="history"></ul>
+
+  <script>
+    let counter = {
+      count: 0,
+      history: []
+    };
+
+    function updateCount() {
+      document.getElementById('count').textContent = counter.count;
+    }
+
+    function increment() {
+      performAction(() => {
+        counter.count++;
+        updateCount();
+        addToHistory('Incremented');
+      });
+    }
+
+    function decrement() {
+      performAction(() => {
+        counter.count--;
+        updateCount();
+        addToHistory('Decremented');
+      });
+    }
+
+    function reset() {
+      performAction(() => {
+        counter.count = 0;
+        updateCount();
+        addToHistory('Reset');
+      });
+    }
+
+    function performAction(actionCallback) {
+      return new Promise((resolve) => {
+        // Simulating an asynchronous action with a delay
+        setTimeout(() => {
+          actionCallback();
+          resolve();
+        }, 500);
+      });
+    }
+
+    function addToHistory(action) {
+      const historyItem = {
+        action,
+        count: counter.count,
+        timestamp: new Date()
+      };
+      counter.history.unshift(historyItem);
+      updateHistory();
+    }
+
+    function updateHistory() {
+      const historyList = document.getElementById('history');
+      historyList.innerHTML = ''; // Clear the history list
+
+      counter.history.forEach(item => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${item.action} (${item.count}) - ${item.timestamp.toLocaleString()}`;
+      historyList.appendChild(listItem);
+     });
+
+    }
+     </script>
+ </body>
+</html>
